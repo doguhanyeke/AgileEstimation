@@ -38,6 +38,7 @@
     "web-vitals": "^0.2.4"
   },
   "devDependencies": {
+    "eslint": "^7.15.0",
     "nodemon": "^2.0.6"
   }
 }

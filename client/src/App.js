@@ -2,17 +2,42 @@ import './App.css';
 import Button from 'react-bootstrap/Button';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import Card from "./components/Card";
+import { useState } from 'react';
 
 function App() {
+  const [username, setUserName] = useState("Deli")
+
+  const handleUserNameChange = (event) => {
+    event.preventDefault()
+    console.log(event.target.username.value)
+    setUserName(event.target.username.value)
+  }
+
   return (
-    <div class="text-center">
-      <h1 class="font-weight-bold">
+    <div className="text-center">
+      <h1 className="font-weight-bold">
         Welcome to Agile Estimator
       </h1>
-      <h2>
+
+      <div className="text-left">
         <p>
-        <Button variant="primary">Create a room</Button>
+          Scrum room id: cryrtbn
         </p>
+        <p>
+          Username: {username}
+        </p>
+      </div>
+      <div className="text-left">
+        <form onSubmit={handleUserNameChange}>
+        <input name="username"></input>
+        <button type="submit">Change</button>
+        </form>
+      </div>
+
+      <h2>
+        <div>
+          <Button variant="primary">Create a room</Button>
+        </div>
         <p>
           or
         </p>
