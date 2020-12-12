@@ -1,23 +1,25 @@
-import logo from './logo.svg';
 import './App.css';
+import Button from 'react-bootstrap/Button';
+import 'bootstrap/dist/css/bootstrap.min.css';
 
 function App() {
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
+    <div class="text-center">
+      <h1 class="font-weight-bold">
+        Welcome to Agile Estimator
+      </h1>
+      <h2>
         <p>
-          Edit <code>src/App.js</code> and save to reload.
+        <Button variant="primary">Create a room</Button>
         </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+        <p>
+          or
+        </p>
+        <p>
+        <input placeholder="Enter room ID"></input>
+        <Button variant="success">Enter</Button>
+        </p>
+      </h2>
     </div>
   );
 }
