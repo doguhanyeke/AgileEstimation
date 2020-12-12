@@ -1,8 +1,8 @@
 import './App.css';
 import Button from 'react-bootstrap/Button';
 import 'bootstrap/dist/css/bootstrap.min.css';
-import Card from "./components/Card";
 import { useState } from 'react';
+import CardsPanel from './components/CardSelection/CardsPanel';
 
 function App() {
   const [username, setUserName] = useState("Deli")
@@ -47,7 +47,7 @@ function App() {
         </p>
       </h2>
       <div>
-        <Card number={"1"} />
+        <CardsPanel/>
       </div>
     </div>
   );
