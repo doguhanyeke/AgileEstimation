@@ -1,6 +1,7 @@
 import './App.css';
 import Button from 'react-bootstrap/Button';
 import 'bootstrap/dist/css/bootstrap.min.css';
+import Card from "./components/Card";
 
 function App() {
   return (
@@ -20,6 +21,9 @@ function App() {
         <Button variant="success">Enter</Button>
         </p>
       </h2>
+      <div>
+        <Card number={"1"} />
+      </div>
     </div>
   );
 }
