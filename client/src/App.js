@@ -30,7 +30,7 @@ function App() {
       <div className="text-left">
         <form onSubmit={handleUserNameChange}>
         <input name="username"></input>
-        <button type="submit">Change</button>
+        <button type="submit">Change username</button>
         </form>
       </div>
 

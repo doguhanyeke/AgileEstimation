@@ -18,6 +18,7 @@ const CardsPanel = (props) => {
           }}>
               {cardScores.map( (score, ind) => {
                     return <Card 
+                            key={score}
                             number={score + ""} 
                             selected={selectedCardIndex === ind}
                             selectedColor={"red"} 
