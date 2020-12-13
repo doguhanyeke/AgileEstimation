@@ -17,9 +17,9 @@ const ResultTable = (props) => {
                     </tr>
                 </thead>
                 <tbody>
-                    {props.resultList.map((result) => {
+                    {props.resultList.map((result, index) => {
                         return (
-                            <tr>
+                            <tr key={index}>
                                 <td>#</td>
                                 <td>{result.strategy}</td>
                                 <td>{result.score}</td>

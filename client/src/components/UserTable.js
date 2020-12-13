@@ -33,7 +33,7 @@ const UserTable = (props) => {
                 <tbody>
                     {props.userList.map((user, index) => {
                         return (
-                            <tr>
+                            <tr key={index}>
                                 <td>{index+1}</td>
                                 <td>{user.name}</td>
                                 {renderSwitch(user)}
