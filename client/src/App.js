@@ -7,13 +7,15 @@ import UserTable from './components/UserTable';
 import ResultTable from './components/ResultTable';
 
 function App() {
-  const [username, setUserName] = useState("Deli")
+  const [username, setUserName] = useState("Deli cocuk")
 
   // round states, 3 options
   // "start" round: only names
   // "voting" round: voted or not
   // "finish" round: points
   const [roundState, setRoundState] = useState("finish")
+
+  const roomAdmin = "Deli cocuk"
 
   const handleUserNameChange = (event) => {
     event.preventDefault()
@@ -73,7 +75,11 @@ function App() {
         {roundState === "finish" ? <ResultTable resultList={resultList}/> : null }
       </div>
       <div>
-        <CardsPanel/>
+        {roundState==="voting" ? <CardsPanel/> : null}
+      </div>
+      <div>
+        {roundState === "start" && roomAdmin === username ? <Button variant="primary">Start Round</Button> : null}
+        {roundState === "voting" && roomAdmin === username ? <Button variant="success">Finish Round</Button> : null}
       </div>
     </div>
   );
