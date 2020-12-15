@@ -23,7 +23,7 @@ router.get('/create', (req, res) => {
 
 
     res.cookie('poker',token, { maxAge: 9000000, httpOnly: false })
-    res.status(200).json({ msg: 'pong' })
+    res.status(200).json({ roomID, userID })
 })
 
 module.exports = router

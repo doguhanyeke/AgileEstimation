@@ -5,15 +5,18 @@ import { useState } from 'react';
 import CardsPanel from './components/CardSelection/CardsPanel';
 import UserTable from './components/UserTable';
 import ResultTable from './components/ResultTable';
+import roomService from './services/room';
 
 function App() {
   const [username, setUserName] = useState("Deli cocuk")
+  const [userID, setUserID] = useState(null)
+  const [roomID, setRoomID] = useState(null)
 
   // round states, 3 options
   // "start" round: only names
   // "voting" round: voted or not
   // "finish" round: points
-  const [roundState, setRoundState] = useState("finish")
+  const [roundState, setRoundState] = useState(null)
 
   const roomAdmin = "Deli cocuk"
 
@@ -37,30 +40,50 @@ function App() {
     { strategy: "Average", score: 2.7}
   ]
 
+  const handleCreateRoomClick = () => {
+    roomService
+    .createRoom()
+    .then(res => {
+      setUserID(res.userID)
+      setRoomID(res.roomID)
+    }).catch(error => {
+      console.log("Error in handleCreateRoomClick")
+    })
+  }
+
   return (
     <div className="text-center">
       <h1 className="font-weight-bold">
         Welcome to Agile Estimator
       </h1>
 
-      <div className="text-left">
-        <p>
-          Scrum room id: cryrtbn
-        </p>
-        <p>
-          Username: {username}
-        </p>
+      <div>
+        <h2>
+          { roomID ? <a href="{roomID}">Room Link</a>
+          : null
+          }
+        </h2>
       </div>
       <div className="text-left">
-        <form onSubmit={handleUserNameChange}>
-        <input name="username"></input>
-        <button type="submit">Change username</button>
-        </form>
+        
+        <p>
+          Scrum Room Id: {roomID}
+        </p>
+        <p>
+          User Id: {userID}
+        </p>
+        <p>
+          <form onSubmit={handleUserNameChange}>
+          Username:
+          <input name="username" placeholder={username}></input>
+          <button type="submit">Change username</button>
+          </form>
+        </p>
       </div>
 
       <h2>
         <div>
-          <Button variant="primary">Create a room</Button>
+          <Button onClick={() => {console.log(handleCreateRoomClick())}} variant="primary">Create a room</Button>
         </div>
         <p>
           or
@@ -71,7 +94,7 @@ function App() {
         </p>
       </h2>
       <div>
-        <UserTable userList={userList} roundState={roundState}/>
+        {roundState && <UserTable userList={userList} roundState={roundState}/>}
         {roundState === "finish" ? <ResultTable resultList={resultList}/> : null }
       </div>
       <div>
