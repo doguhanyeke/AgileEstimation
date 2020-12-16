@@ -51,6 +51,7 @@ function App() {
     .then(res => {
       setUserID(res.userID)
       setRoomID(res.roomID)
+      setRoundState("start")
     }).catch(error => {
       console.log("Error in handleCreateRoomClick")
     })
@@ -62,7 +63,7 @@ function App() {
         Welcome to Agile Estimator
       </h1>
 
-      <div className="text-left">        
+      <div>        
         <p>
           Scrum Room Id: {roomID}
         </p>
@@ -86,14 +87,15 @@ function App() {
             setRoundState={setRoundState}
             userList={userList}
             resultList={resultList}
-            admin={""}
+            roomAdmin={roomAdmin}
             username={username}
           />
           
         </Route>
         <Route path="/">
           <h2>
-            { roomID ? <Link to="/room">Room Link</Link>
+            { roomID 
+            ? <Link to="/room">Room Link</Link>
             : null
             }
           </h2>

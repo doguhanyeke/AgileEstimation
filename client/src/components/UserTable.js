@@ -26,7 +26,7 @@ const UserTable = (props) => {
                 <thead>
                     <tr>
                     <th>#</th>
-                    <th>Name</th>
+                    <th>Users</th>
                     {props.roundState === "start" ? null : <th>Status</th>}
                     </tr>
                 </thead>
@@ -41,7 +41,7 @@ const UserTable = (props) => {
                         )
                     })}
                 </tbody>
-                </Table>       
+            </Table>       
         </div>
     )
 }

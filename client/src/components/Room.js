@@ -11,11 +11,9 @@ const Room = (props) => {
     const roomAdmin = props.roomAdmin
     const username = props.username
     const setRoundState = props.setRoundState
-    
+
     return (
         <div>
-            {roundState && <UserTable userList={userList} roundState={roundState}/>}
-            {roundState === "finish" ? <ResultTable resultList={resultList}/> : null }
             <div>
                 {roundState && <UserTable userList={userList} roundState={roundState}/>}
                 {roundState === "finish" ? <ResultTable resultList={resultList}/> : null }
@@ -24,8 +22,12 @@ const Room = (props) => {
                 {roundState==="voting" ? <CardsPanel/> : null}
             </div>
             <div>
-                {roundState === "start" && roomAdmin === username ? <Button variant="primary">Start Round</Button> : null}
-                {roundState === "voting" && roomAdmin === username ? <Button variant="success">Finish Round</Button> : null}
+                {roundState === "start" && roomAdmin === username 
+                ? <Button variant="primary">Start Round</Button> 
+                : null}
+                {roundState === "voting" && roomAdmin === username 
+                ? <Button variant="success">Finish Round</Button> 
+                : null}
             </div>
         </div>
     )
