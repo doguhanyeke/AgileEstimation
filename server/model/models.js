@@ -30,6 +30,14 @@ class Room {
         this.users.push(new User(userID,userName))
     }
 
+    removeUser(userID) {
+        this.users = this.users.map(user => {
+            if(user.userID !== userID) {
+                return user
+            }
+        })
+    }
+
     voteFromUser(userID, score) {
         this.votes.push(new Vote(score,userID))
     }

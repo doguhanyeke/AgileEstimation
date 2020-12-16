@@ -8,7 +8,7 @@ const Room = (props) => {
     const roundState = props.roundState
     const userList = props.userList
     const resultList = props.resultList
-    const roomAdmin = props.roomAdmin
+    const roomAdmin = ""
     const username = props.username
     const setRoundState = props.setRoundState
 

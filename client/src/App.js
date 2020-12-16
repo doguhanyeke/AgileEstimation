@@ -10,20 +10,24 @@ import {
   useRouteMatch,
   Switch,
   Link,
+  history,
+  withRouter,
+  useHistory
 } from 'react-router-dom'
 
-function App() {
-  const [username, setUserName] = useState("Deli cocuk")
+const  App = () => {
+  const [username, setUserName] = useState("jj")
   const [userID, setUserID] = useState(null)
   const [roomID, setRoomID] = useState(null)
+  const [noUsernameErrorMes, setNoUsernameErrorMes] = useState(null)
+
+  const history = useHistory();
 
   // round states, 3 options
   // "start" round: only names
   // "voting" round: voted or not
   // "finish" round: points
   const [roundState, setRoundState] = useState(null)
-
-  const roomAdmin = "Deli cocuk"
 
   const handleUserNameChange = (event) => {
     event.preventDefault()
@@ -46,15 +50,36 @@ function App() {
   ]
 
   const handleCreateRoomClick = () => {
-    roomService
-    .createRoom()
-    .then(res => {
-      setUserID(res.userID)
-      setRoomID(res.roomID)
-      setRoundState("start")
-    }).catch(error => {
-      console.log("Error in handleCreateRoomClick")
-    })
+    if(!username){
+      setNoUsernameErrorMes("You first need to set username!")
+      setTimeout(() => {
+        setNoUsernameErrorMes(null)  
+      }, 3000)
+    } else {
+      roomService
+      .createRoom()
+      .then(res => {
+        setUserID(res.userID)
+        setRoomID(res.roomID)
+        setRoundState("start")
+      }).catch(error => {
+        console.log("Error in handleCreateRoomClick")
+      })
+    }
+  }
+
+  const handleEnterRoomIDClick = (e) => {
+    e.preventDefault()
+    if(!username){
+      setNoUsernameErrorMes("You first need to set username!")
+      setTimeout(() => {
+        setNoUsernameErrorMes(null)  
+      }, 3000)
+    } else {
+      console.log(e.target.roomID.value)
+      history.push(`/room/${e.target.roomID.value}`)
+      // history.push(`/room/${e.target.roomID.value}`)
+    }
   }
 
   return (
@@ -70,6 +95,9 @@ function App() {
         <p>
           User Id: {userID}
         </p>
+        <p>
+          Username: {username}
+        </p>
         <div>
           <form onSubmit={handleUserNameChange}>
           Username:
@@ -81,13 +109,12 @@ function App() {
       
 
       <Switch>
-        <Route path="/room">
+        <Route path="/room/:id">
           <Room 
             roundState={roundState}
             setRoundState={setRoundState}
             userList={userList}
             resultList={resultList}
-            roomAdmin={roomAdmin}
             username={username}
           />
           
@@ -95,21 +122,24 @@ function App() {
         <Route path="/">
           <h2>
             { roomID 
-            ? <Link to="/room">Room Link</Link>
+            ? <Link to={`/room/${roomID}`}>Room Link</Link>
             : null
             }
           </h2>
           {!roomID ?
             <h2>
               <div>
-                {!roomID ? <Button onClick={() => {console.log(handleCreateRoomClick())}} variant="primary">Create a room</Button> : null}
+                {!roomID ? <Button onClick={() => handleCreateRoomClick()} variant="primary">Create a room</Button> : null}
               </div>
               <p>
                 or
               </p>
+              <form onSubmit={handleEnterRoomIDClick}>
+                <input placeholder="Enter room ID" name="roomID"></input>
+                <Button type="submit">Enter</Button>
+              </form>
               <p>
-                <input placeholder="Enter room ID"></input>
-                <Button variant="success">Enter</Button>
+                {noUsernameErrorMes}
               </p>
             </h2>
             : null
