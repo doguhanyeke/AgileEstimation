@@ -7,13 +7,13 @@ const UserTable = (props) => {
     const renderSwitch = (user) => {
         switch(props.roundState) {
             case "start":
-                return null
+                return <td></td>
             case "voting":
                 return <td>{user.status ? "Voted!" : "-"}</td>
             case "finish":
                 return <td>{user.status ? user.score : "-"}</td>
             default:
-                return null
+                return <td></td>
         }
     }
 

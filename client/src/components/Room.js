@@ -7,6 +7,7 @@ import Button from 'react-bootstrap/Button';
 const Room = (props) => {
     const roundState = props.roundState
     const userList = props.userList
+    console.log(props.userList)
     const resultList = props.resultList
     const roomAdmin = props.roomAdmin
     const username = props.username
@@ -15,7 +16,7 @@ const Room = (props) => {
     return (
         <div>
             <div>
-                {roundState && <UserTable userList={userList} roundState={roundState}/>}
+                {roundState && <UserTable userList={props.userList} roundState={roundState}/>}
                 {roundState === "finish" ? <ResultTable resultList={resultList}/> : null }
             </div>
             <div>

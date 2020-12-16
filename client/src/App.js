@@ -1,7 +1,7 @@
 import './App.css';
 import Button from 'react-bootstrap/Button';
 import 'bootstrap/dist/css/bootstrap.min.css';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import roomService from './services/room';
 import Room from './components/Room'
 import { 
@@ -16,12 +16,35 @@ function App() {
   const [username, setUserName] = useState("Deli cocuk")
   const [userID, setUserID] = useState(null)
   const [roomID, setRoomID] = useState(null)
+  const [token, setToken] = useState(null)
+  const [userList, setUserList] = useState([])
 
   // round states, 3 options
   // "start" round: only names
   // "voting" round: voted or not
   // "finish" round: points
   const [roundState, setRoundState] = useState(null)
+
+  useEffect(() => {
+    const id = setInterval(() => 
+      roomService.getStatus(token)
+        .then(function(response) {
+           console.log("asdfasdf", response.status)
+           if (response.status !== 200) {
+            console.log(
+              "Looks like there was a problem. Status Code: " + response.status
+            );
+            return;
+          }
+           setRoundState(response.data.state)
+           setUserList(response.data.users)
+        })
+        .catch(function(err) {
+          console.log("Fetch Error :-S", err);
+        })
+    , 3000)
+    return () => clearInterval(id);  
+  });
 
   const roomAdmin = "Deli cocuk"
 
@@ -32,13 +55,13 @@ function App() {
     event.target.username.value = ""
   }
 
-  const userList = [
+  /*const userList = [
     { name: "Deli cocuk", status: false, score: 1},
     { name: "Efendi cocuk", status: false, score: 5},
     { name: "Janti boi", status: true, score: 3},
     { name: "Serseri mayin", status: false, score: 8},
     { name: "Bam bam boi", status: true, score: 3}
-  ]
+  ]*/
 
   const resultList = [
     { strategy: "Most Voted", score: 3},
@@ -46,12 +69,12 @@ function App() {
   ]
 
   const handleCreateRoomClick = () => {
-    roomService
-    .createRoom()
+    roomService.createRoom()
     .then(res => {
       setUserID(res.userID)
       setRoomID(res.roomID)
       setRoundState("start")
+      setToken(res.token)
     }).catch(error => {
       console.log("Error in handleCreateRoomClick")
     })

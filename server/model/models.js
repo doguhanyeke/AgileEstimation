@@ -1,6 +1,6 @@
 class Vote {
-    constructor(score, userID) {
-        this.userID = userID
+    constructor(score, user) {
+        this.user = user
         this.score = score
     }
 }
@@ -18,20 +18,21 @@ class Room {
         this.roomID = roomID
         this.users = [admin]
         this.status = 'start'
-        this.admin = admin
+        this.admin = admin.name
+        this.votes = []
+
         this.addUser = this.addUser.bind(this)
         this.voteFromUser = this.voteFromUser.bind(this)
         this.flushVotes = this.flushVotes.bind(this)
         this.changeStatus = this.changeStatus.bind(this)
-        this.votes = []
     }
 
     addUser(userID, userName) {
         this.users.push(new User(userID,userName))
     }
 
-    voteFromUser(userID, score) {
-        this.votes.push(new Vote(score,userID))
+    voteFromUser(user, score) {
+        this.votes.push(new Vote(score,user))
     }
 
     flushVotes() {
@@ -42,6 +43,7 @@ class Room {
         this.status = status
     }
 }
+
 
 module.exports = {
     User,
