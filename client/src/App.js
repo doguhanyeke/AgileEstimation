@@ -2,10 +2,15 @@ import './App.css';
 import Button from 'react-bootstrap/Button';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import { useState } from 'react';
-import CardsPanel from './components/CardSelection/CardsPanel';
-import UserTable from './components/UserTable';
-import ResultTable from './components/ResultTable';
 import roomService from './services/room';
+import Room from './components/Room'
+import { 
+  BrowserRouter as Router,
+  Route,
+  useRouteMatch,
+  Switch,
+  Link,
+} from 'react-router-dom'
 
 function App() {
   const [username, setUserName] = useState("Deli cocuk")
@@ -57,53 +62,58 @@ function App() {
         Welcome to Agile Estimator
       </h1>
 
-      <div>
-        <h2>
-          { roomID ? <a href="{roomID}">Room Link</a>
-          : null
-          }
-        </h2>
-      </div>
-      <div className="text-left">
-        
+      <div className="text-left">        
         <p>
           Scrum Room Id: {roomID}
         </p>
         <p>
           User Id: {userID}
         </p>
-        <p>
+        <div>
           <form onSubmit={handleUserNameChange}>
           Username:
           <input name="username" placeholder={username}></input>
           <button type="submit">Change username</button>
           </form>
-        </p>
-      </div>
-
-      <h2>
-        <div>
-          <Button onClick={() => {console.log(handleCreateRoomClick())}} variant="primary">Create a room</Button>
         </div>
-        <p>
-          or
-        </p>
-        <p>
-        <input placeholder="Enter room ID"></input>
-        <Button variant="success">Enter</Button>
-        </p>
-      </h2>
-      <div>
-        {roundState && <UserTable userList={userList} roundState={roundState}/>}
-        {roundState === "finish" ? <ResultTable resultList={resultList}/> : null }
       </div>
-      <div>
-        {roundState==="voting" ? <CardsPanel/> : null}
-      </div>
-      <div>
-        {roundState === "start" && roomAdmin === username ? <Button variant="primary">Start Round</Button> : null}
-        {roundState === "voting" && roomAdmin === username ? <Button variant="success">Finish Round</Button> : null}
-      </div>
+      
+
+      <Switch>
+        <Route path="/room">
+          <Room 
+            roundState={roundState}
+            setRoundState={setRoundState}
+            userList={userList}
+            resultList={resultList}
+            admin={""}
+            username={username}
+          />
+          
+        </Route>
+        <Route path="/">
+          <h2>
+            { roomID ? <Link to="/room">Room Link</Link>
+            : null
+            }
+          </h2>
+          {!roomID ?
+            <h2>
+              <div>
+                {!roomID ? <Button onClick={() => {console.log(handleCreateRoomClick())}} variant="primary">Create a room</Button> : null}
+              </div>
+              <p>
+                or
+              </p>
+              <p>
+                <input placeholder="Enter room ID"></input>
+                <Button variant="success">Enter</Button>
+              </p>
+            </h2>
+            : null
+          }
+        </Route>
+      </Switch>
     </div>
   );
 }
