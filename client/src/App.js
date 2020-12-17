@@ -5,13 +5,9 @@ import { useState, useEffect } from 'react';
 import roomService from './services/room';
 import Room from './components/Room'
 import { 
-  BrowserRouter as Router,
   Route,
-  useRouteMatch,
   Switch,
   Link,
-  history,
-  withRouter,
   useHistory
 } from 'react-router-dom'
 
@@ -51,8 +47,6 @@ const  App = () => {
     , 3000)
     return () => clearInterval(id);  
   });
-
-  const roomAdmin = "Deli cocuk"
 
   const handleUserNameChange = (event) => {
     event.preventDefault()
