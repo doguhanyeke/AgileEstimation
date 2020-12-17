@@ -21,11 +21,14 @@ router.get('/create', (req, res) => {
 
     const token = jwt.sign({ userID: userID, roomID: roomID, role:'admin' }, jwtAppSecret)
 
-    const newRoom = new Room(roomID, new User(userID, 'admin'))
+
+    const username = uniqueNamesGenerator({ dictionaries: [adjectives, colors, animals] })
+
+    const newRoom = new Room(roomID, new User(userID, username))
     rooms[roomID] = newRoom
 
     res.cookie('poker',token, { maxAge: 9000000, httpOnly: false })
-    res.status(200).json({ roomID, userID, token })
+    res.status(200).json({ roomID, userID, token, username })
 })
 
 router.post('/addUser', (req, res) => {
