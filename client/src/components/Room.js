@@ -4,7 +4,7 @@ import UserTable from './UserTable';
 import ResultTable from './ResultTable';
 import Button from 'react-bootstrap/Button';
 import { useParams } from "react-router-dom";
-import addUser from "../services/user"
+import { addUser, changeUserName } from "../services/user"
 
 const Room = (props) => {
     const roundState = props.roundState
@@ -37,9 +37,12 @@ const Room = (props) => {
     
     const handleUserNameChange = (event) => {
         event.preventDefault()
-        // console.log(event.target.username.value)
-        // setUserName(event.target.username.value)
-        // event.target.username.value = ""
+        changeUserName(event.target.username.value)
+        .then(res => {
+            console.log("here", res)
+            setUserName(event.target.username.value)
+        })
+        .catch(e => console.log("ereh", e.message))
     }
 
     return (

@@ -2,13 +2,13 @@ import axios from 'axios'
 
 const baseUrl = 'http://localhost:3001'
 
-const createRoom = async () => {
+export const createRoom = async () => {
     const result = await axios.get(baseUrl+"/room/create")
     // console.log(result.data)
     return result.data
 }
 
-const getStatus = async (token) => {
+export const getStatus = async (token) => {
     const result = await axios.get(baseUrl+"/room/status", {
         headers: {
           'Authorization': 'Bearer ' + token,
@@ -19,6 +19,7 @@ const getStatus = async (token) => {
     return result
 }
 
+// eslint-disable-next-line import/no-anonymous-default-export
 export default {
     createRoom,
     getStatus

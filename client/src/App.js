@@ -70,37 +70,25 @@ const  App = () => {
   ]
 
   const handleCreateRoomClick = () => {
-    if(!username){
-      setNoUsernameErrorMes("You first need to set username!")
-      setTimeout(() => {
-        setNoUsernameErrorMes(null)  
-      }, 3000)
-    } else {
-      roomService
-      .createRoom()
-      .then(res => {
-        setUserID(res.userID)
-        setRoomID(res.roomID)
-        setRoundState("start")
-        console.log(res.token)
-        localStorage.setItem("authToken", res.token)
-      }).catch(error => {
-        console.log("Error in handleCreateRoomClick")
-      })
-    }
+    roomService
+    .createRoom()
+    .then(res => {
+      setUserID(res.userID)
+      setRoomID(res.roomID)
+      setUserName(res.username)
+      setRoundState("start")
+      console.log(res.token)
+      localStorage.setItem("authToken", res.token)
+      history.push(`/room/${res.roomID}`)  
+    }).catch(error => {
+      console.log("Error in handleCreateRoomClick")
+    })
   }
 
   const handleEnterRoomIDClick = (e) => {
     e.preventDefault()
-    if(!username){
-      setNoUsernameErrorMes("You first need to set username!")
-      setTimeout(() => {
-        setNoUsernameErrorMes(null)  
-      }, 3000)
-    } else {
-      console.log(e.target.roomID.value)
-      history.push(`/room/${e.target.roomID.value}`)
-    }
+    console.log(e.target.roomID.value)
+    history.push(`/room/${e.target.roomID.value}`)
   }
 
   return (
