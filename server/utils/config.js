@@ -1,0 +1,1 @@
+module.exports.jwtAppSecret = 'dogu<3utku'

@@ -1,49 +1,66 @@
 const { Room, User } = require('../model/models')
+const { jwtAppSecret } = require('../utils/config')
+const { authenticateToken } = require('../middleware/authentication')
+const { uniqueNamesGenerator, adjectives, colors, animals } = require('unique-names-generator')
 
 var express = require('express')
 var jwt = require('jsonwebtoken')
 
 
 const { v4: uuidv4 } = require('uuid')
+const { Router } = require('express')
 
 var router = express.Router()
 
-const appSecret = 'dogu<3utku'
-
-const rooms = {}
+const rooms = {
+}
 
 router.get('/create', (req, res) => {
     const roomID = uuidv4()
     const userID = uuidv4()
 
-    var token = jwt.sign({ userID: userID, roomID: roomID, role:'admin' }, appSecret)
+    const token = jwt.sign({ userID: userID, roomID: roomID, role:'admin' }, jwtAppSecret)
 
-    const newRoom = new Room(roomID, new User(userID, "admin"))
+    const newRoom = new Room(roomID, new User(userID, 'admin'))
     rooms[roomID] = newRoom
 
     res.cookie('poker',token, { maxAge: 9000000, httpOnly: false })
     res.status(200).json({ roomID, userID, token })
 })
 
+router.post('/addUser', (req, res) => {
+    console.log("geldimmmmm")
+    const roomID = req.body.roomID
+    const realRoom = rooms[roomID]
+
+    const userID = uuidv4()
+    const username = uniqueNamesGenerator({ dictionaries: [adjectives, colors, animals] })
+    const token = jwt.sign({ userID: userID, roomID: roomID, role:'user' }, jwtAppSecret)
+
+    realRoom.addUser(userID, username)
+
+    res.status(200).json({ username, userID, token })
+})
+
 router.use(authenticateToken)
 
 router.get('/status', (req, res) => {
-    console.log("/status with userid", req.token.userID)
-    realRoom = rooms[req.token.roomID]
-    room = clone(realRoom)
+    console.log('/status with userid', req.token.userID)
+    const realRoom = rooms[req.token.roomID]
+    const room = clone(realRoom)
 
-    if (room.status == "start") {
+    if (room.status === 'start') {
         delete room.votes
         res.status(200).json(room)
         return
-    } else if (room.status == "voting") {
+    } else if (room.status === 'voting') {
         room.votes.map( vote => {
-            if (vote.score !== nil) {
-                vote.score = "voted"
+            if (vote.score !== null) {
+                vote.score = 'voted'
             }
         })
         res.status(200).json(room)
-    } else if (room.status == "finish") {
+    } else if (room.status === 'finish') {
         res.status(200).json(room)
     }
     return
@@ -51,23 +68,7 @@ router.get('/status', (req, res) => {
 
 
 function clone(a) {
-    return JSON.parse(JSON.stringify(a));
- }
-
- function authenticateToken(req, res, next) {
-    // Gather the jwt access token from the request header
-    const authHeader = req.headers['authorization']
-    const token = authHeader && authHeader.split(' ')[1]
-    if (token == null) return res.sendStatus(401) // if there isn't any token
-  
-    jwt.verify(token, appSecret, (err, token) => {
-      if (err) {
-        console.log(err)
-        return res.sendStatus(403)
-      }
-      req.token = token
-      next() // pass the execution off to whatever request the client intended
-    })
+    return JSON.parse(JSON.stringify(a))
 }
 
 module.exports = router

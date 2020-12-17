@@ -8,14 +8,15 @@ import {
   Route,
   Switch,
   Link,
-  useHistory
+  useHistory,
+  useLocation,
+  useParams
 } from 'react-router-dom'
 
 const  App = () => {
-  const [username, setUserName] = useState("jj")
+  const [username, setUserName] = useState("null")
   const [userID, setUserID] = useState(null)
   const [roomID, setRoomID] = useState(null)
-  const [token, setToken] = useState(null)
   const [userList, setUserList] = useState([])
   const [noUsernameErrorMes, setNoUsernameErrorMes] = useState(null)
 
@@ -29,7 +30,7 @@ const  App = () => {
 
   useEffect(() => {
     const id = setInterval(() => 
-      roomService.getStatus(token)
+      roomService.getStatus(localStorage.getItem("authToken"))
         .then(function(response) {
            console.log("asdfasdf", response.status)
            if (response.status !== 200) {
@@ -38,7 +39,10 @@ const  App = () => {
             );
             return;
           }
-           setRoundState(response.data.state)
+          console.log("aklımız", response)
+          console.log("roundstate", response.data.status)
+          console.log("state roundstate", roundState)
+           setRoundState(response.data.status)
            setUserList(response.data.users)
         })
         .catch(function(err) {
@@ -46,14 +50,11 @@ const  App = () => {
         })
     , 3000)
     return () => clearInterval(id);  
-  });
+  }, []);
 
-  const handleUserNameChange = (event) => {
-    event.preventDefault()
-    console.log(event.target.username.value)
-    setUserName(event.target.username.value)
-    event.target.username.value = ""
-  }
+  const { rid } = useParams("/room/:rid")
+  console.log("qqq", rid)
+  console.log("q", window.location.pathname)
 
   /*const userList = [
     { name: "Deli cocuk", status: false, score: 1},
@@ -81,7 +82,8 @@ const  App = () => {
         setUserID(res.userID)
         setRoomID(res.roomID)
         setRoundState("start")
-        setToken(res.token)
+        console.log(res.token)
+        localStorage.setItem("authToken", res.token)
       }).catch(error => {
         console.log("Error in handleCreateRoomClick")
       })
@@ -98,7 +100,6 @@ const  App = () => {
     } else {
       console.log(e.target.roomID.value)
       history.push(`/room/${e.target.roomID.value}`)
-      // history.push(`/room/${e.target.roomID.value}`)
     }
   }
 
@@ -115,16 +116,6 @@ const  App = () => {
         <p>
           User Id: {userID}
         </p>
-        <p>
-          Username: {username}
-        </p>
-        <div>
-          <form onSubmit={handleUserNameChange}>
-          Username:
-          <input name="username" placeholder={username}></input>
-          <button type="submit">Change username</button>
-          </form>
-        </div>
       </div>
       
 
@@ -136,6 +127,7 @@ const  App = () => {
             userList={userList}
             resultList={resultList}
             username={username}
+            setUserName={setUserName}
           />
           
         </Route>
