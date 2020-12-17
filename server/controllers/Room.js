@@ -21,11 +21,14 @@ router.get('/create', (req, res) => {
 
     const token = jwt.sign({ userID: userID, roomID: roomID, role:'admin' }, jwtAppSecret)
 
-    const newRoom = new Room(roomID, new User(userID, 'admin'))
+
+    const username = uniqueNamesGenerator({ dictionaries: [adjectives, colors, animals] })
+
+    const newRoom = new Room(roomID, new User(userID, username))
     rooms[roomID] = newRoom
 
     res.cookie('poker',token, { maxAge: 9000000, httpOnly: false })
-    res.status(200).json({ roomID, userID, token })
+    res.status(200).json({ roomID, userID, token, username })
 })
 
 router.post('/addUser', (req, res) => {
@@ -37,7 +40,7 @@ router.post('/addUser', (req, res) => {
     const username = uniqueNamesGenerator({ dictionaries: [adjectives, colors, animals] })
     const token = jwt.sign({ userID: userID, roomID: roomID, role:'user' }, jwtAppSecret)
 
-    realRoom.addUser(userID, username)
+    realRoom.upsertUser(userID, username)
 
     res.status(200).json({ username, userID, token })
 })
@@ -66,6 +69,16 @@ router.get('/status', (req, res) => {
     return
 })
 
+router.post('/changeUsername', (req, res) => {
+    const username = req.body.username
+    const userID = req.token.userID
+    console.log('/changeUsername with userid', userID, "to ", username)
+
+    const realRoom = rooms[req.token.roomID]
+    realRoom.upsertUser(userID, username)
+
+    res.status(200).send()
+})
 
 function clone(a) {
     return JSON.parse(JSON.stringify(a))
