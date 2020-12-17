@@ -37,7 +37,7 @@ const Room = (props) => {
     
     const handleUserNameChange = (event) => {
         event.preventDefault()
-        changeUserName(event.target.username.value)
+        changeUserName(event.target.username.value, localStorage.getItem("authToken"))
         .then(res => {
             console.log("here", res)
             setUserName(event.target.username.value)
