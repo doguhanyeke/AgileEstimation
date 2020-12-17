@@ -37,7 +37,7 @@ router.post('/addUser', (req, res) => {
     const username = uniqueNamesGenerator({ dictionaries: [adjectives, colors, animals] })
     const token = jwt.sign({ userID: userID, roomID: roomID, role:'user' }, jwtAppSecret)
 
-    realRoom.addUser(userID, username)
+    realRoom.upsertUser(userID, username)
 
     res.status(200).json({ username, userID, token })
 })
@@ -66,6 +66,16 @@ router.get('/status', (req, res) => {
     return
 })
 
+router.post('/changeUsername', (req, res) => {
+    const username = req.body.username
+    const userID = req.token.userID
+    console.log('/changeUsername with userid', userID, "to ", username)
+
+    const realRoom = rooms[req.token.roomID]
+    realRoom.upsertUser(userID, username)
+
+    res.status(200).send()
+})
 
 function clone(a) {
     return JSON.parse(JSON.stringify(a))
