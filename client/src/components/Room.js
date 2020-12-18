@@ -1,12 +1,14 @@
-import React from "react";
+import React, { useState } from "react";
 import CardsPanel from './CardSelection/CardsPanel';
 import UserTable from './UserTable';
 import ResultTable from './ResultTable';
 import Button from 'react-bootstrap/Button';
 import { useParams } from "react-router-dom";
 import { addUser, changeUserName } from "../services/user"
+import { changeRoomState } from '../services/room'
 
 const Room = (props) => {
+    const isAdmin = props.isAdmin
     const roundState = props.roundState
     const userList = props.userList
     console.log(props.userList)
@@ -16,7 +18,7 @@ const Room = (props) => {
     const setRoundState = props.setRoundState
     const setUserName = props.setUserName
 
-    console.log("here", roundState)
+    // console.log("here", roundState)
 
     const { id } = useParams()
 
@@ -65,11 +67,18 @@ const Room = (props) => {
                 {roundState==="voting" ? <CardsPanel/> : null}
             </div>
             <div>
-                {roundState === "start" && roomAdmin === username 
-                ? <Button variant="primary">Start Round</Button> 
+                {roundState === "start" && isAdmin 
+                ? <Button variant="primary" onClick={() => {
+                    setRoundState("voting")
+                    changeRoomState("voting", id, localStorage.getItem("authToken") ).then(res => setRoundState("voting")).catch(e => console.log(e.message))
+                }
+                }>Start Round</Button> 
                 : null}
-                {roundState === "voting" && roomAdmin === username 
-                ? <Button variant="success">Finish Round</Button> 
+                {roundState === "voting" && isAdmin 
+                ? <Button variant="success" onClick={() => {
+                    setRoundState("finish")
+                    changeRoomState("finish", id, localStorage.getItem("authToken") ).then(res => setRoundState("finish")).catch(e => console.log(e.message))
+                }}>Finish Round</Button> 
                 : null}
             </div>
         </div>

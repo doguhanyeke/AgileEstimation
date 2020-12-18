@@ -9,12 +9,12 @@ import {
   Switch,
   Link,
   useHistory,
-  useLocation,
   useParams
 } from 'react-router-dom'
 
 const  App = () => {
-  const [username, setUserName] = useState("null")
+  const [isAdmin, setIsAdmin] = useState(false)
+  const [username, setUserName] = useState(null)
   const [userID, setUserID] = useState(null)
   const [roomID, setRoomID] = useState(null)
   const [userList, setUserList] = useState([])
@@ -48,13 +48,9 @@ const  App = () => {
         .catch(function(err) {
           console.log("Fetch Error :-S", err);
         })
-    , 3000)
+    , 1000)
     return () => clearInterval(id);  
   }, []);
-
-  const { rid } = useParams("/room/:rid")
-  console.log("qqq", rid)
-  console.log("q", window.location.pathname)
 
   /*const userList = [
     { name: "Deli cocuk", status: false, score: 1},
@@ -73,6 +69,7 @@ const  App = () => {
     roomService
     .createRoom()
     .then(res => {
+      setIsAdmin(true)
       setUserID(res.userID)
       setRoomID(res.roomID)
       setUserName(res.username)
@@ -116,6 +113,7 @@ const  App = () => {
             resultList={resultList}
             username={username}
             setUserName={setUserName}
+            isAdmin={isAdmin}
           />
           
         </Route>

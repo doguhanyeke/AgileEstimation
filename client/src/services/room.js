@@ -19,8 +19,20 @@ export const getStatus = async (token) => {
     return result
 }
 
+export const changeRoomState = async (state, roomID, token) => {
+  const result = await axios.post(baseUrl+"/room/changeRoomState", {roomState: state, roomID}, {
+      headers: {
+        'Authorization': 'Bearer ' + token,
+        'Cache-Control': "no-cache"
+      }
+    })
+  console.log(result.data)
+  return result
+}
+
 // eslint-disable-next-line import/no-anonymous-default-export
 export default {
     createRoom,
-    getStatus
+    getStatus,
+    changeRoomState
 }

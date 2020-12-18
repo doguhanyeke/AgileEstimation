@@ -2,18 +2,13 @@ const { Room, User } = require('../model/models')
 const { jwtAppSecret } = require('../utils/config')
 const { authenticateToken } = require('../middleware/authentication')
 const { uniqueNamesGenerator, adjectives, colors, animals } = require('unique-names-generator')
-
 var express = require('express')
 var jwt = require('jsonwebtoken')
-
-
 const { v4: uuidv4 } = require('uuid')
-const { Router } = require('express')
 
 var router = express.Router()
 
-const rooms = {
-}
+const rooms = {}
 
 router.get('/create', (req, res) => {
     const roomID = uuidv4()
@@ -32,7 +27,7 @@ router.get('/create', (req, res) => {
 })
 
 router.post('/addUser', (req, res) => {
-    console.log("geldimmmmm")
+    console.log('entered to addUser')
     const roomID = req.body.roomID
     const realRoom = rooms[roomID]
 
@@ -46,6 +41,16 @@ router.post('/addUser', (req, res) => {
 })
 
 router.use(authenticateToken)
+
+router.post('/changeRoomState', (req, res) => {
+    console.log('entered to changeRoomState')
+    const roomID = req.body.roomID
+    const newState = req.body.roomState
+    const realRoom = rooms[roomID]
+
+    realRoom.changeStatus(newState)
+    res.status(200).end()
+})
 
 router.get('/status', (req, res) => {
     console.log('/status with userid', req.token.userID)
