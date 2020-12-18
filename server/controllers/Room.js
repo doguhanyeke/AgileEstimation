@@ -5,6 +5,7 @@ const { uniqueNamesGenerator, adjectives, colors, animals } = require('unique-na
 var express = require('express')
 var jwt = require('jsonwebtoken')
 const { v4: uuidv4 } = require('uuid')
+const { getAverage } = require('../utils/helper_functions')
 
 var router = express.Router()
 
@@ -77,12 +78,38 @@ router.get('/status', (req, res) => {
 router.post('/changeUsername', (req, res) => {
     const username = req.body.username
     const userID = req.token.userID
-    console.log('/changeUsername with userid', userID, "to ", username)
+    console.log('/changeUsername with userid', userID, 'to ', username)
 
     const realRoom = rooms[req.token.roomID]
     realRoom.upsertUser(userID, username)
 
     res.status(200).send()
+})
+
+router.post('/vote', (req, res) => {
+    // the followings also appear in token, we can change here
+    const roomID = req.body.roomID
+    const score = req.body.score
+    const userID = req.body.userID
+    console.log('/vote')
+
+    const realRoom = rooms[roomID]
+    const currentUser = realRoom.users.filter(user => user.userID === userID)
+    realRoom.voteFromUser(currentUser, score)
+
+    res.status(200).end()
+})
+
+router.post('/result/', (req, res) => {
+    console.log('/result')
+    const roomID = req.body.roomID
+
+    const realRoom = rooms[roomID]
+    console.log(realRoom.votes)
+    const avg = getAverage(realRoom.votes.map(vote => vote.score))
+    console.log('avg', avg)
+
+    res.status(200).json({ 'strategy': 'averageScore', score: avg })
 })
 
 function clone(a) {

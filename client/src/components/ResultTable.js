@@ -2,7 +2,8 @@ import React from "react";
 import Table from 'react-bootstrap/Table';
 
 const ResultTable = (props) => {
-    console.log(props)
+
+    console.log("here", props.resultList)
     const style = {
         width: "400px"
     }

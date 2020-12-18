@@ -2,7 +2,6 @@ import React from "react";
 import Table from 'react-bootstrap/Table';
 
 const UserTable = (props) => {
-    console.log(props)
 
     const renderSwitch = (user) => {
         switch(props.roundState) {

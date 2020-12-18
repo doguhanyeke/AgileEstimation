@@ -1,15 +1,22 @@
 import {useState} from "react"
 import Card from "./Card"
 import Button from 'react-bootstrap/Button';
+import room, { vote } from '../../services/room'
 
 const CardsPanel = (props) => {
+    const userID = props.userID
+    const roomID = props.roomID
     //const color = props.selected ? props.selectedColor : props.defaultColor
     const [selectedCardIndex, setSelectedCardIndex] = useState(null);
     const cardScores = [1,2,3,5,8,13,21];
 
     const voteScore = function () {
-        console.log("do http call with score" + cardScores[selectedCardIndex])
-        
+        // console.log("do http call with score" + cardScores[selectedCardIndex])
+        vote(userID, cardScores[selectedCardIndex], roomID, localStorage.getItem("authToken")).then(result => {
+            console.log("voted!")
+        }).catch(e => {
+            console.log("error in vote", e.message)
+        }) 
     }
 
     return(

@@ -18,7 +18,6 @@ const  App = () => {
   const [userID, setUserID] = useState(null)
   const [roomID, setRoomID] = useState(null)
   const [userList, setUserList] = useState([])
-  const [noUsernameErrorMes, setNoUsernameErrorMes] = useState(null)
 
   const history = useHistory();
 
@@ -32,16 +31,13 @@ const  App = () => {
     const id = setInterval(() => 
       roomService.getStatus(localStorage.getItem("authToken"))
         .then(function(response) {
-           console.log("asdfasdf", response.status)
+          //  console.log("asdfasdf", response.status)
            if (response.status !== 200) {
             console.log(
               "Looks like there was a problem. Status Code: " + response.status
             );
             return;
           }
-          console.log("aklımız", response)
-          console.log("roundstate", response.data.status)
-          console.log("state roundstate", roundState)
            setRoundState(response.data.status)
            setUserList(response.data.users)
         })
@@ -114,6 +110,7 @@ const  App = () => {
             username={username}
             setUserName={setUserName}
             isAdmin={isAdmin}
+            userID={userID}
           />
           
         </Route>
@@ -136,9 +133,6 @@ const  App = () => {
                 <input placeholder="Enter room ID" name="roomID"></input>
                 <Button type="submit">Enter</Button>
               </form>
-              <p>
-                {noUsernameErrorMes}
-              </p>
             </h2>
             : null
           }

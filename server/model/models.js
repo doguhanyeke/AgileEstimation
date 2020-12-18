@@ -35,7 +35,7 @@ class Room {
             this.users.push(new User(userID,username))
             return
         }
-        
+
         const updatedUser = new User(userID, username)
         this.users[index] = updatedUser
         this.votes.find( vote => {
