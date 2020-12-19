@@ -53,11 +53,21 @@ export const getResults = async (roomID, token) => {
   return result
 }
 
+export const flushVotes = async (roomID, token) => {
+  console.log("token in /flushvotes", token)
+  const result = await axios.post(baseUrl+'/room/flushVotes', 
+    {roomID},
+    returnAuthConfig(token)
+  )
+  return result
+}
+
 // eslint-disable-next-line import/no-anonymous-default-export
 export default {
     createRoom,
     getStatus,
     changeRoomState,
     vote,
-    getResults
+    getResults,
+    flushVotes
 }

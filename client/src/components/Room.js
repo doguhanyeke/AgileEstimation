@@ -6,7 +6,7 @@ import Button from 'react-bootstrap/Button';
 import { useParams } from "react-router-dom";
 import { addUser, changeUserName } from "../services/user"
 import { changeRoomState } from '../services/room'
-import { getResults } from '../services/room'
+import { getResults, flushVotes } from '../services/room'
 
 const Room = (props) => {
     const [resultList, setResultList] = useState([])
@@ -76,6 +76,9 @@ const Room = (props) => {
                     setRoundState("voting")
                     changeRoomState("voting", id, localStorage.getItem("authToken") ).then(res => setRoundState("voting")).catch(e => console.log(e.message))
                     setResultList([])
+                    flushVotes(id, localStorage.getItem("authToken"))
+                    .then(res => console.log("room votes cleaned!"))
+                    .catch(e => console.log("error in flushVotes", e.message))
                 }
                 }>Start Round</Button> 
                 : null}

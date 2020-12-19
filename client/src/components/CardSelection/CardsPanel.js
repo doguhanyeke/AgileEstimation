@@ -4,6 +4,7 @@ import Button from 'react-bootstrap/Button';
 import room, { vote } from '../../services/room'
 
 const CardsPanel = (props) => {
+    const [isClicked, setIsClicked] = useState(false)
     const userID = props.userID
     const roomID = props.roomID
     //const color = props.selected ? props.selectedColor : props.defaultColor
@@ -14,6 +15,7 @@ const CardsPanel = (props) => {
         // console.log("do http call with score" + cardScores[selectedCardIndex])
         vote(userID, cardScores[selectedCardIndex], roomID, localStorage.getItem("authToken")).then(result => {
             console.log("voted!")
+            setIsClicked(true)
         }).catch(e => {
             console.log("error in vote", e.message)
         }) 
@@ -52,7 +54,7 @@ const CardsPanel = (props) => {
                 })}
             </div>
             <div style={{maxHeight: "40px", alignSelf:"flex-end"}}>
-                <Button onClick={voteScore} variant="success" disabled={selectedCardIndex === null}>Vote!</Button>
+                <Button onClick={voteScore} variant="success" disabled={selectedCardIndex === null || isClicked}>Vote!</Button>
             </div>
         </div>
     )

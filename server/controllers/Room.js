@@ -112,6 +112,16 @@ router.post('/result/', (req, res) => {
     res.status(200).json({ 'strategy': 'averageScore', score: avg })
 })
 
+router.post('/flushVotes', (req, res) => {
+    console.log('/flushVotes')
+    const roomID = req.body.roomID
+
+    const realRoom = rooms[roomID]
+    realRoom.flushVotes()
+
+    res.status(200).end()
+})
+
 function clone(a) {
     return JSON.parse(JSON.stringify(a))
 }
