@@ -1,7 +1,7 @@
 import {useState} from "react"
 import Card from "./Card"
 import Button from 'react-bootstrap/Button';
-import room, { vote } from '../../services/room'
+import { vote } from '../../services/room'
 
 const CardsPanel = (props) => {
     const [isClicked, setIsClicked] = useState(false)
@@ -19,6 +19,12 @@ const CardsPanel = (props) => {
         }).catch(e => {
             console.log("error in vote", e.message)
         }) 
+    }
+
+    const clearScore = () => {
+        setSelectedCardIndex(null)
+        setIsClicked(false)
+        // TODO: Send /clearVote req to backend
     }
 
     return(
@@ -54,7 +60,10 @@ const CardsPanel = (props) => {
                 })}
             </div>
             <div style={{maxHeight: "40px", alignSelf:"flex-end"}}>
-                <Button onClick={voteScore} variant="success" disabled={selectedCardIndex === null || isClicked}>Vote!</Button>
+                <Button onClick={voteScore} variant="success" disabled={selectedCardIndex === null || isClicked}>Vote</Button>
+            </div>
+            <div style={{maxHeight: "40px", alignSelf:"flex-end"}}>
+                <Button onClick={clearScore} variant="success" disabled={!isClicked}>Clear</Button>
             </div>
         </div>
     )
