@@ -19,6 +19,7 @@ const ResultTable = (props) => {
                 </thead>
                 <tbody>
                     {props.resultList.map((result, index) => {
+                        console.log(props.resultList)
                         return (
                             <tr key={index}>
                                 <td>#</td>

@@ -8,7 +8,8 @@ const UserTable = (props) => {
             case "start":
                 return <td></td>
             case "voting":
-                return <td>{user.status ? "Voted!" : "-"}</td>
+                const vote = props.voteList.find(vote => vote.user.id === user.id)
+                return <td>{vote ? "Voted!" : "-"}</td>
             case "finish":
                 return <td>{user.status ? user.score : "-"}</td>
             default:
@@ -30,7 +31,7 @@ const UserTable = (props) => {
                     </tr>
                 </thead>
                 <tbody>
-                    {props.userList.map((user, index) => {
+                    {props.userList && props.userList.map((user, index) => {
                         return (
                             <tr key={index}>
                                 <td>{index+1}</td>

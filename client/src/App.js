@@ -18,6 +18,8 @@ const  App = () => {
   const [userID, setUserID] = useState(null)
   const [roomID, setRoomID] = useState(null)
   const [userList, setUserList] = useState([])
+  const [voteList, setVoteList] = useState([])
+  const [resultList, setResultList] = useState([])
 
   const history = useHistory();
 
@@ -40,6 +42,9 @@ const  App = () => {
           }
            setRoundState(response.data.status)
            setUserList(response.data.users)
+           setVoteList(response.data.votes || [])
+           console.log(response.data.results)
+           setResultList(response.data.results ? response.data.results : [])
         })
         .catch(function(err) {
           console.log("Fetch Error :-S", err);
@@ -56,10 +61,10 @@ const  App = () => {
     { name: "Bam bam boi", status: true, score: 3}
   ]*/
 
-  const resultList = [
+  /*const resultList = [
     { strategy: "Most Voted", score: 3},
     { strategy: "Average", score: 2.7}
-  ]
+  ]*/
 
   const handleCreateRoomClick = () => {
     roomService
@@ -106,6 +111,7 @@ const  App = () => {
             roundState={roundState}
             setRoundState={setRoundState}
             userList={userList}
+            voteList={voteList}
             resultList={resultList}
             username={username}
             setUserName={setUserName}
