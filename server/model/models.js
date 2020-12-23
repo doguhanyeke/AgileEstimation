@@ -14,12 +14,13 @@ class User {
 }
 
 class Room {
-    constructor(roomID, admin) {
+    constructor(roomID, admin, strategyNames) {
         this.roomID = roomID
         this.users = [admin]
         this.status = 'start'
         this.admin = admin.name
         this.votes = []
+        this.calculationStrategies = strategyNames
 
         this.upsertUser = this.upsertUser.bind(this)
         this.voteFromUser = this.voteFromUser.bind(this)
@@ -54,7 +55,14 @@ class Room {
     }
 
     voteFromUser(user, score) {
-        this.votes.push(new Vote(score,user))
+        const index = this.votes.findIndex( vote => {
+            return vote.user.id === user.id
+        })
+        if (index === -1) {
+            this.votes.push(new Vote(score,user))
+            return
+        }
+        this.votes[index] = new Vote(score,user)
     }
 
     flushVotes() {

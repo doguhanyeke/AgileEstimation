@@ -5,11 +5,18 @@ const { uniqueNamesGenerator, adjectives, colors, animals } = require('unique-na
 var express = require('express')
 var jwt = require('jsonwebtoken')
 const { v4: uuidv4 } = require('uuid')
-const { getAverage } = require('../utils/helper_functions')
+const { getAverage, mostVoted } = require('../utils/helper_functions')
 
 var router = express.Router()
 
 const rooms = {}
+
+const scoreStrategyNames = ["averageScore", "mostVoted"]
+const scoreStrategies = {
+    "averageScore": votes => getAverage(votes.map(vote => vote.score)),
+    "mostVoted": votes => mostVoted(votes.map(vote => vote.score)),
+}
+
 
 router.get('/create', (req, res) => {
     const roomID = uuidv4()
@@ -20,7 +27,7 @@ router.get('/create', (req, res) => {
 
     const username = uniqueNamesGenerator({ dictionaries: [adjectives, colors, animals] })
 
-    const newRoom = new Room(roomID, new User(userID, username))
+    const newRoom = new Room(roomID, new User(userID, username), scoreStrategyNames)
     rooms[roomID] = newRoom
 
     res.cookie('poker',token, { maxAge: 9000000, httpOnly: false })
@@ -48,15 +55,52 @@ router.post('/changeRoomState', (req, res) => {
     const roomID = req.body.roomID
     const newState = req.body.roomState
     const realRoom = rooms[roomID]
+    const oldState = realRoom.status
+
+    switch(newState) {
+        case "finish":
+            if (oldState !== "voting") {
+                res.status(400).send()
+                return
+            }
+            const results = []
+            realRoom.calculationStrategies.map(strategy => results.push({strategy, score:scoreStrategies[strategy](realRoom.votes)}))
+            realRoom.results = results
+            break
+        case "voting":
+            console.log("newstate", newState)
+            console.log("oldstate", oldState)
+            console.log("room", realRoom)
+
+            if (oldState === "voting") {
+                res.status(400).send()
+                return
+            }
+            realRoom.flushVotes()
+            break
+        case "start":
+            if (oldState !== "finish") {
+                res.status(400).send()
+                return
+            }
+            realRoom.flushVotes()
+            break
+    }
 
     realRoom.changeStatus(newState)
     res.status(200).end()
 })
 
 router.get('/status', (req, res) => {
-    console.log('/status with userid', req.token.userID)
     const realRoom = rooms[req.token.roomID]
+
+    if (!realRoom) {
+        res.status(200).json({data: "no such room"})
+        return
+    }
+
     const room = clone(realRoom)
+
 
     if (room.status === 'start') {
         delete room.votes
@@ -90,26 +134,22 @@ router.post('/vote', (req, res) => {
     // the followings also appear in token, we can change here
     const roomID = req.body.roomID
     const score = req.body.score
-    const userID = req.body.userID
-    console.log('/vote')
+    const userID = req.token.userID
+    console.log('/vote', userID)
 
     const realRoom = rooms[roomID]
-    const currentUser = realRoom.users.filter(user => user.userID === userID)
+    console.log('/vote users', realRoom.users)
+    const currentUserList = realRoom.users.filter(user => user.id === userID)
+    if (currentUserList.length === 0 ) {
+        res.status(400).json({})
+        return
+    }
+    const currentUser = currentUserList[0]
+
+    console.log('/vote votes', realRoom.votes)
     realRoom.voteFromUser(currentUser, score)
 
     res.status(200).end()
-})
-
-router.post('/result/', (req, res) => {
-    console.log('/result')
-    const roomID = req.body.roomID
-
-    const realRoom = rooms[roomID]
-    console.log(realRoom.votes)
-    const avg = getAverage(realRoom.votes.map(vote => vote.score))
-    console.log('avg', avg)
-
-    res.status(200).json({ 'strategy': 'averageScore', score: avg })
 })
 
 router.post('/flushVotes', (req, res) => {
