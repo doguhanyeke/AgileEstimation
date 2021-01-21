@@ -1,17 +1,22 @@
-import React, { useState, useEffect } from "react";
+import React, { useEffect } from "react";
 import CardsPanel from './CardSelection/CardsPanel';
 import UserTable from './UserTable';
 import ResultTable from './ResultTable';
-import Button from 'react-bootstrap/Button';
 import { useParams } from "react-router-dom";
 import { addUser, changeUserName } from "../services/user"
 import { changeRoomState } from '../services/room'
-import { getResults, flushVotes } from '../services/room'
+import { flushVotes } from '../services/room'
+import {
+    Button,
+    Form,
+    Container,
+    Row,
+    Col
+  } from 'react-bootstrap';
 
 const Room = (props) => {
     const isAdmin = props.isAdmin
     const roundState = props.roundState
-    const userList = props.userList
     const voteList = props.voteList
     const userID = props.userID
     const username = props.username
@@ -86,12 +91,18 @@ const Room = (props) => {
                 {roundState === "finish" ? <ResultTable resultList={props.resultList}/> : null }
             </div>
             <div>
-                {roundState==="voting" 
-                ? <CardsPanel
-                    userID={userID}
-                    roomID={id}
-                /> 
-                : null}
+                <Container>
+                    <Row className="justify-content-md-center">
+                        <Col md="auto">
+                            {roundState==="voting" 
+                            ? <CardsPanel
+                                userID={userID}
+                                roomID={id}
+                            /> 
+                            : null}
+                        </Col>
+                    </Row>
+                </Container>
             </div>
             <div>
                 {(roundState === "start" || roundState === "finish") && isAdmin 
@@ -105,7 +116,7 @@ const Room = (props) => {
                 }>Start Round</Button> 
                 : null}
                 {roundState === "voting" && isAdmin 
-                ? <Button variant="success" onClick={() => {
+                ? <Button variant="primary" onClick={() => {
                     changeRoomState("finish", id, localStorage.getItem("authToken") ).then(res => setRoundState("finish")).catch(e => console.log(e.message))
                 }}>Finish Round</Button> 
                 : null}

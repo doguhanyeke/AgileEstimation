@@ -1,7 +1,10 @@
 import './App.css';
 import {
   Button,
-  Form
+  Form,
+  Container,
+  Row,
+  Col
 } from 'react-bootstrap';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import { useState, useEffect } from 'react';
@@ -12,15 +15,13 @@ import {
   Switch,
   Link,
   useHistory,
-  useParams,
 } from 'react-router-dom'
-import Footer from './components/Footer'
 
 const  App = () => {
-  const [isAdmin, setIsAdmin] = useState(false)
-  const [username, setUserName] = useState(null)
+  const [isAdmin, setIsAdmin] = useState(false || localStorage.getItem("isAdmin"))
+  const [username, setUserName] = useState(null || localStorage.getItem("userName"))
   const [userID, setUserID] = useState(null)
-  const [roomID, setRoomID] = useState(null)
+  const [roomID, setRoomID] = useState(null || localStorage.getItem("roomID"))
   const [userList, setUserList] = useState([])
   const [voteList, setVoteList] = useState([])
   const [resultList, setResultList] = useState([])
@@ -57,27 +58,18 @@ const  App = () => {
     return () => clearInterval(id);  
   }, []);
 
-  /*const userList = [
-    { name: "Deli cocuk", status: false, score: 1},
-    { name: "Efendi cocuk", status: false, score: 5},
-    { name: "Janti boi", status: true, score: 3},
-    { name: "Serseri mayin", status: false, score: 8},
-    { name: "Bam bam boi", status: true, score: 3}
-  ]*/
-
-  /*const resultList = [
-    { strategy: "Most Voted", score: 3},
-    { strategy: "Average", score: 2.7}
-  ]*/
-
   const handleCreateRoomClick = () => {
     roomService
     .createRoom()
     .then(res => {
       setIsAdmin(true)
+      localStorage.setItem("isAdmin", true)
       setUserID(res.userID)
+      console.log("melodi", res.roomID)
       setRoomID(res.roomID)
+      localStorage.setItem("roomID", res.roomID)
       setUserName(res.username)
+      localStorage.setItem("userName", res.username)
       setRoundState("start")
       console.log(res.token)
       localStorage.setItem("authToken", res.token)
@@ -94,23 +86,25 @@ const  App = () => {
   }
 
   return (
-    <div className="text-center">
+    <div className="text-center" >
       <h1 className="font-weight-bold">
         Agile Estimator
       </h1>
-
-      <div>        
-        <p>
-          Scrum Room Id: {roomID}
-        </p>
-        <p>
-          User Id: {userID}
-        </p>
-      </div>
       
-
       <Switch>
         <Route path="/room/:id">
+          <Container>
+            <Row className="justify-content-md-center">
+              <Col>
+                <h2>
+                  { roomID 
+                  ? <Link to={`/room/${roomID}`}>Room Link</Link>
+                  : null
+                  }
+                </h2>
+              </Col>
+            </Row>
+          </Container>
           <Room 
             roundState={roundState}
             setRoundState={setRoundState}
@@ -122,30 +116,30 @@ const  App = () => {
             isAdmin={isAdmin}
             userID={userID}
           />
-          
         </Route>
         <Route path="/">
-          <h2>
-            { roomID 
-            ? <Link to={`/room/${roomID}`}>Room Link</Link>
-            : null
-            }
-          </h2>
-          {!roomID ?
-            <h2>
-              <div>
-                {!roomID ? <Button onClick={() => handleCreateRoomClick()} variant="primary">Create a room</Button> : null}
-              </div>
-              <p>
-                or
-              </p>
-              <Form onSubmit={handleEnterRoomIDClick}>
-                <input placeholder="Enter room ID" name="roomID"></input>
-                <Button type="submit">Enter</Button>
-              </Form>
-            </h2>
-            : null
-          }
+          <Container>
+            <Row>
+              <Col>
+                {!roomID ?
+                  <h2>
+                    <div>
+                      {!roomID ? <Button onClick={() => handleCreateRoomClick()} variant="primary">Create a room</Button> : null}
+                    </div>
+                    <p>
+                    <p>
+                    </p>
+                    </p>
+                    <Form onSubmit={handleEnterRoomIDClick}>
+                      <input placeholder="Enter room ID" name="roomID"></input>
+                      <Button variant="primary" size='lg'>Enter</Button>
+                    </Form>
+                  </h2>
+                  : null
+                }
+              </Col>
+            </Row>
+          </Container>
         </Route>
       </Switch>
     </div>
