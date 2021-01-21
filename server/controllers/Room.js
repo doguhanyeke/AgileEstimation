@@ -11,10 +11,10 @@ var router = express.Router()
 
 const rooms = {}
 
-const scoreStrategyNames = ["averageScore", "mostVoted"]
+const scoreStrategyNames = ['averageScore', 'mostVoted']
 const scoreStrategies = {
-    "averageScore": votes => getAverage(votes.map(vote => vote.score)),
-    "mostVoted": votes => mostVoted(votes.map(vote => vote.score)),
+    'averageScore': votes => getAverage(votes.map(vote => vote.score)),
+    'mostVoted': votes => mostVoted(votes.map(vote => vote.score)),
 }
 
 
@@ -58,33 +58,33 @@ router.post('/changeRoomState', (req, res) => {
     const oldState = realRoom.status
 
     switch(newState) {
-        case "finish":
-            if (oldState !== "voting") {
-                res.status(400).send()
-                return
-            }
-            const results = []
-            realRoom.calculationStrategies.map(strategy => results.push({strategy, score:scoreStrategies[strategy](realRoom.votes)}))
-            realRoom.results = results
-            break
-        case "voting":
-            console.log("newstate", newState)
-            console.log("oldstate", oldState)
-            console.log("room", realRoom)
+    case 'finish':
+        if (oldState !== 'voting') {
+            res.status(400).send()
+            return
+        }
+        const results = []
+        realRoom.calculationStrategies.map(strategy => results.push({strategy, score:scoreStrategies[strategy](realRoom.votes)}))
+        realRoom.results = results
+        break
+    case 'voting':
+        console.log('newstate', newState)
+        console.log('oldstate', oldState)
+        console.log('room', realRoom)
 
-            if (oldState === "voting") {
-                res.status(400).send()
-                return
-            }
-            realRoom.flushVotes()
-            break
-        case "start":
-            if (oldState !== "finish") {
-                res.status(400).send()
-                return
-            }
-            realRoom.flushVotes()
-            break
+        if (oldState === 'voting') {
+            res.status(400).send()
+            return
+        }
+        realRoom.flushVotes()
+        break
+    case 'start':
+        if (oldState !== 'finish') {
+            res.status(400).send()
+            return
+        }
+        realRoom.flushVotes()
+        break
     }
 
     realRoom.changeStatus(newState)
@@ -95,7 +95,7 @@ router.get('/status', (req, res) => {
     const realRoom = rooms[req.token.roomID]
 
     if (!realRoom) {
-        res.status(200).json({data: "no such room"})
+        res.status(200).json({ data: 'no such room' })
         return
     }
 
@@ -148,6 +148,21 @@ router.post('/vote', (req, res) => {
 
     console.log('/vote votes', realRoom.votes)
     realRoom.voteFromUser(currentUser, score)
+
+    res.status(200).end()
+})
+
+router.post('/clearVote', (req, res) => {
+    console.log('/clearVote')
+    const roomID = req.body.roomID
+    const userID = req.body.userID
+    console.log('userID ', userID, 'roomID: ', roomID)
+    const realRoom = rooms[roomID]
+    if (! realRoom) {
+        res.status(400).end()
+        return
+    }
+    realRoom.clearVote(userID)
 
     res.status(200).end()
 })

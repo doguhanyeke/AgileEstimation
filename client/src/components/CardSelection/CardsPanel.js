@@ -1,7 +1,7 @@
 import {useState} from "react"
 import Card from "./Card"
 import Button from 'react-bootstrap/Button';
-import { vote } from '../../services/room'
+import { vote, clearVote } from '../../services/room'
 
 const CardsPanel = (props) => {
     const [isClicked, setIsClicked] = useState(false)
@@ -22,9 +22,14 @@ const CardsPanel = (props) => {
     }
 
     const clearScore = () => {
-        setSelectedCardIndex(null)
-        setIsClicked(false)
-        // TODO: Send /clearVote req to backend
+        console.log("userID, roomID", userID, roomID)
+        clearVote(userID, roomID, localStorage.getItem('authToken')).then(result => {
+            console.log("vote cleared!")
+            setSelectedCardIndex(null)
+            setIsClicked(false)
+        }).catch(e => {
+            console.log("error in clearVote", e.message)
+        })
     }
 
     return(

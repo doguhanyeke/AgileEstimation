@@ -23,9 +23,11 @@ class Room {
         this.calculationStrategies = strategyNames
 
         this.upsertUser = this.upsertUser.bind(this)
+        this.removeUser = this.removeUser.bind(this)
         this.voteFromUser = this.voteFromUser.bind(this)
         this.flushVotes = this.flushVotes.bind(this)
         this.changeStatus = this.changeStatus.bind(this)
+        this.clearVote = this.clearVote.bind(this)
     }
 
     upsertUser(userID, username) {
@@ -71,6 +73,12 @@ class Room {
 
     changeStatus(status) {
         this.status = status
+    }
+
+    clearVote(userID) {
+        this.votes = this.votes.map(vote => vote.user.userID === userID
+            ? null
+            : vote)
     }
 }
 

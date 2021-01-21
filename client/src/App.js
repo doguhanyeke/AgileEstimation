@@ -1,5 +1,8 @@
 import './App.css';
-import Button from 'react-bootstrap/Button';
+import {
+  Button,
+  Form
+} from 'react-bootstrap';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import { useState, useEffect } from 'react';
 import roomService from './services/room';
@@ -9,8 +12,9 @@ import {
   Switch,
   Link,
   useHistory,
-  useParams
+  useParams,
 } from 'react-router-dom'
+import Footer from './components/Footer'
 
 const  App = () => {
   const [isAdmin, setIsAdmin] = useState(false)
@@ -92,7 +96,7 @@ const  App = () => {
   return (
     <div className="text-center">
       <h1 className="font-weight-bold">
-        Welcome to Agile Estimator
+        Agile Estimator
       </h1>
 
       <div>        
@@ -135,10 +139,10 @@ const  App = () => {
               <p>
                 or
               </p>
-              <form onSubmit={handleEnterRoomIDClick}>
+              <Form onSubmit={handleEnterRoomIDClick}>
                 <input placeholder="Enter room ID" name="roomID"></input>
                 <Button type="submit">Enter</Button>
-              </form>
+              </Form>
             </h2>
             : null
           }
