@@ -28,6 +28,39 @@
   color: #61dafb;
 }
 
+.coupon-applied {
+  border-color: green !important;
+  background: #bdffb4;
+}
+.lucky-coupon {
+  border: 5px dashed #ccc;
+  width: 320px;
+  display: inline-block;
+  font-size: 1.2em;
+}
+
+.lucky-coupon-code {
+  padding: 15px;
+  display: inline-block;
+  float: left;
+  font-weight: bold;
+}
+
+.copy-code {
+  padding: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+}
+
+.coupon-copied {
+  padding: 13px 0px;
+  display: inline-block;
+  color: green;
+  font-size: 19px;
+}
+
 @keyframes App-logo-spin {
   from {
     transform: rotate(0deg);

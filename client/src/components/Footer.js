@@ -1,7 +1,5 @@
 import React from 'react';
 import { FaBeer } from 'react-icons/fa';
-import { Link } from 'react-router-dom';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 
 
 const Footer = () => {

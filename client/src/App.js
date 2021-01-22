@@ -16,6 +16,8 @@ import {
   Link,
   useHistory,
 } from 'react-router-dom'
+import { CopyToClipboard } from 'react-copy-to-clipboard';
+import {localhost} from './config.json'
 
 const  App = () => {
   const [isAdmin, setIsAdmin] = useState(false || localStorage.getItem("isAdmin"))
@@ -25,6 +27,8 @@ const  App = () => {
   const [userList, setUserList] = useState([])
   const [voteList, setVoteList] = useState([])
   const [resultList, setResultList] = useState([])
+  const [copied, setCopied] = useState(false);
+  const [copyButtonValue, setCopyButtonValue] = useState('Invite')
 
   const history = useHistory();
 
@@ -84,9 +88,8 @@ const  App = () => {
     console.log(e.target.roomID.value)
     history.push(`/room/${e.target.roomID.value}`)
   }
-
   return (
-    <div className="text-center" >
+    <div className="text-center" style={{backgroundColor: 'grey'}}>
       <h1 className="font-weight-bold">
         Agile Estimator
       </h1>
@@ -97,10 +100,17 @@ const  App = () => {
             <Row className="justify-content-md-center">
               <Col>
                 <h2>
-                  { roomID 
-                  ? <Link to={`/room/${roomID}`}>Room Link</Link>
-                  : null
-                  }
+                  <Link to={`/room/${roomID}`}>Room Link</Link>
+                  <CopyToClipboard text={`${localhost}/room/${roomID}`}
+                    onCopy={() => {
+                      setCopied(true)
+                      setCopyButtonValue('Copied!')
+                      setTimeout(() => {
+                        setCopyButtonValue('Invite')
+                      }, 5000)
+                    }}>
+                    <Button>{copyButtonValue}</Button>
+                  </CopyToClipboard>
                 </h2>
               </Col>
             </Row>

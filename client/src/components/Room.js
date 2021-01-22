@@ -85,9 +85,10 @@ const Room = (props) => {
                 <button type="submit">Change username</button>
                 </form>
             </div>
-            <div>
+            <div style={{display: 'flex', justifyContent: 'center'}}>
                 {roundState && <UserTable userList={props.userList} roundState={roundState} voteList={voteList}/>}
-                {console.log(props.resultList)}
+            </div>
+            <div style={{display: 'flex', justifyContent: 'center'}}>
                 {roundState === "finish" ? <ResultTable resultList={props.resultList}/> : null }
             </div>
             <div>

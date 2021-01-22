@@ -10,7 +10,7 @@ const CardsPanel = (props) => {
     const roomID = props.roomID
     //const color = props.selected ? props.selectedColor : props.defaultColor
     const [selectedCardIndex, setSelectedCardIndex] = useState(null);
-    const cardScores = [1,2,3,5,8,13,21];
+    const cardScores = [0,1,2,3,5,8,13,21];
 
     const voteScore = function () {
         // console.log("do http call with score" + cardScores[selectedCardIndex])
