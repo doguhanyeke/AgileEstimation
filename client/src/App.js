@@ -18,6 +18,10 @@ import {
 } from 'react-router-dom'
 import { CopyToClipboard } from 'react-copy-to-clipboard';
 import {localhost} from './config.json'
+import {ThemeProvider} from "styled-components";
+import { GlobalStyles } from "./components/GlobalStyles";
+import { lightTheme, darkTheme } from "./components/Themes"
+import BootstrapSwitchButton from 'bootstrap-switch-button-react'
 
 const  App = () => {
   const [isAdmin, setIsAdmin] = useState(false || localStorage.getItem("isAdmin"))
@@ -27,8 +31,9 @@ const  App = () => {
   const [userList, setUserList] = useState([])
   const [voteList, setVoteList] = useState([])
   const [resultList, setResultList] = useState([])
-  const [copied, setCopied] = useState(false);
+  const [copied, setCopied] = useState(false)
   const [copyButtonValue, setCopyButtonValue] = useState('Invite')
+  const [theme, setTheme] = useState('light')
 
   const history = useHistory();
 
@@ -88,71 +93,90 @@ const  App = () => {
     console.log(e.target.roomID.value)
     history.push(`/room/${e.target.roomID.value}`)
   }
+
+  const themeToggler = () => {
+    theme === 'light' ? setTheme('dark') : setTheme('light')
+  }
+
   return (
-    <div className="text-center" style={{backgroundColor: 'grey'}}>
-      <h1 className="font-weight-bold">
-        Agile Estimator
-      </h1>
-      
-      <Switch>
-        <Route path="/room/:id">
-          <Container>
-            <Row className="justify-content-md-center">
-              <Col>
-                <h2>
-                  <Link to={`/room/${roomID}`}>Room Link</Link>
-                  <CopyToClipboard text={`${localhost}/room/${roomID}`}
-                    onCopy={() => {
-                      setCopied(true)
-                      setCopyButtonValue('Copied!')
-                      setTimeout(() => {
-                        setCopyButtonValue('Invite')
-                      }, 5000)
-                    }}>
-                    <Button>{copyButtonValue}</Button>
-                  </CopyToClipboard>
-                </h2>
-              </Col>
-            </Row>
-          </Container>
-          <Room 
-            roundState={roundState}
-            setRoundState={setRoundState}
-            userList={userList}
-            voteList={voteList}
-            resultList={resultList}
-            username={username}
-            setUserName={setUserName}
-            isAdmin={isAdmin}
-            userID={userID}
-          />
-        </Route>
-        <Route path="/">
-          <Container>
-            <Row>
-              <Col>
-                {!roomID ?
+    <ThemeProvider theme={theme === 'light' ? lightTheme : darkTheme}>
+      <>
+      <GlobalStyles/>
+      <div className="text-center">
+        <h1 className="font-weight-bold">
+          Agile Estimator
+        </h1>
+        <BootstrapSwitchButton
+          size='sm'
+          checked={false}
+          onlabel='Dark'
+          onstyle='dark'
+          offlabel='Light'
+          offstyle='light'
+          onChange={themeToggler}
+      />
+        
+        <Switch>
+          <Route path="/room/:id">
+            <Container>
+              <Row className="justify-content-md-center">
+                <Col>
                   <h2>
-                    <div>
-                      {!roomID ? <Button onClick={() => handleCreateRoomClick()} variant="primary">Create a room</Button> : null}
-                    </div>
-                    <p>
-                    <p>
-                    </p>
-                    </p>
-                    <Form onSubmit={handleEnterRoomIDClick}>
-                      <input placeholder="Enter room ID" name="roomID"></input>
-                      <Button variant="primary" size='lg'>Enter</Button>
-                    </Form>
+                    <Link to={`/room/${roomID}`}>Room Link</Link>
+                    <CopyToClipboard text={`${localhost}/room/${roomID}`}
+                      onCopy={() => {
+                        setCopied(true)
+                        setCopyButtonValue('Copied!')
+                        setTimeout(() => {
+                          setCopyButtonValue('Invite')
+                        }, 5000)
+                      }}>
+                      <Button>{copyButtonValue}</Button>
+                    </CopyToClipboard>
                   </h2>
-                  : null
-                }
-              </Col>
-            </Row>
-          </Container>
-        </Route>
-      </Switch>
-    </div>
+                </Col>
+              </Row>
+            </Container>
+            <Room 
+              roundState={roundState}
+              setRoundState={setRoundState}
+              userList={userList}
+              voteList={voteList}
+              resultList={resultList}
+              username={username}
+              setUserName={setUserName}
+              isAdmin={isAdmin}
+              userID={userID}
+            />
+          </Route>
+          <Route path="/">
+            <Container>
+              <Row>
+                <Col>
+                  {!roomID ?
+                    <h2>
+                      <div>
+                        {!roomID ? <Button onClick={() => handleCreateRoomClick()} variant="primary">Create a room</Button> : null}
+                      </div>
+                      <p>
+                      <p>
+                      </p>
+                      </p>
+                      <Form onSubmit={handleEnterRoomIDClick}>
+                        <input placeholder="Enter room ID" name="roomID"></input>
+                        <Button variant="primary" size='lg'>Enter</Button>
+                      </Form>
+                    </h2>
+                    : null
+                  }
+                </Col>
+              </Row>
+            </Container>
+          </Route>
+        </Switch>
+      </div>
+      </>
+    </ThemeProvider>
   );
 }
 
