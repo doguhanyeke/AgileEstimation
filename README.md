@@ -3,4 +3,4 @@ Website for estimating the scrum points for the tasks. Before this application, 
 The screenshots of the app will be hopefully shared soon.  
 For the ones who want to clone and deploy this app quickly, we also provide the containerized version.  
 
-![alt text](https://github.com/twoinfiniteloops/AgileEstimation/main/screenshots/image1.jpg)
+![alt text](https://github.com/twoinfiniteloops/AgileEstimation/main/screenshots/image1.png)
